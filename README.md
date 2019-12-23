@@ -52,22 +52,8 @@ https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 
 ## Configuration
 
-**LMIC library settings**  
+#### General settings
 
-Make sure to set the correct LoRa network plan in *lmic_project_config.h*. This file typically resides in the *libraries/MCCI_LoRaWAN_LMIC_library/project_config* folder in your Arduino projects folder.  
-The following settings are an example for use of the European TTN plan.
-
-<pre><code>
-#define CFG_eu868
-#define LMIC_DEBUG_LEVEL 0
-#define CFG_sx1276_radio 1
-#define ARDUINO_SAMD_FEATHER_M0
-#define DISABLE_BEACONS
-#define DISABLE_PING
-#define DISABLE_JOIN
-</pre></code>
-
-**General settings**
 * *SEND_AFTER*  
 Defines at which rate the device sends updates to The Things Network. Keep in mind that there is a limited data rate for the TTN (see [maximum duty cycle](https://www.thethingsnetwork.org/docs/lorawan/duty-cycle.html#maximum-duty-cycle)). The devices sends a summary over the specified period (see [limitations](#limitations)).
 * *DISABLE_SERIAL*  
@@ -83,7 +69,7 @@ Snippet from [*AmsterdamSoundsKit.ino*](./Arduino/AmsterdamSoundsKit/AmsterdamSo
 #define SEND_AFTER    300
 </pre></code>
 
-**LoRa settings**  
+#### LoRa settings
 
 Currently only ABP is implemented. The device address and keys have to be set to the ones generated in the TTN console.
 
@@ -104,7 +90,7 @@ static const u4_t DEVADDR = 0x00000000;
 * *DEVADDR*  
 4 byte **Device Address** to be copied from device overview in TTN console.
 
-**SLM settings**  
+#### SLM settings
 
 Snippet from [*SLMSettings.h*](./Arduino/AmsterdamSoundsKit/SLMSettings.h)
 
@@ -138,30 +124,44 @@ cat /dev/cu.usbmodem14111 | mplayer -rawaudio rate=48000:channels=1:samplesize=4
 * *Other settings*  
 These settings are probably good to go. They allow you to tweak how the audio is analyzed. Current settings make the device capture audio at 48000hz and do a FFT analysis over 1024 samples of audio at a rate of 32 times per second. Changing these settings could lead to performance or memory issues. For example, longer FFT requires more processing time and longer buffers. Secondly the  scaling table for correcting the frequency response of the microphone and doing dBA weighting is precalculated for a specific FFT size. Changing this would require precalculating a new table ([*EQ.h*](./Arduino/AmsterdamSoundsKit/)).
 
+#### LMIC library settings  
 
+Make sure to set the correct LoRa network plan in *lmic_project_config.h*. This file typically resides in the *libraries/MCCI_LoRaWAN_LMIC_library/project_config* folder in your Arduino projects folder.  
+The following settings are an example for use of the European TTN plan.
 
-
+<pre><code>
+#define CFG_eu868
+#define LMIC_DEBUG_LEVEL 0
+#define CFG_sx1276_radio 1
+#define ARDUINO_SAMD_FEATHER_M0
+#define DISABLE_BEACONS
+#define DISABLE_PING
+#define DISABLE_JOIN
+</pre></code>
 
 ## TTN setup
 
-* Register
+In order to be able to send data to The Things Network you have to make an account, [register](https://www.thethingsnetwork.org/docs/applications/add.html) an *application* and [add](https://www.thethingsnetwork.org/docs/devices/registration.html) *devices* to that application.
+The application is your sandbox within TTN that manages all the devices registered to the application. N.B. currently the Arduino code only supports ABP devices, no OTAA yet.
 
-* ABP is currently used since this works quicker than OTAA when the devices resets often (as the device does, see [limitations](#limitations) ).
+#### Application setings
 
-* Frame counter check needs to be disabled. This is a security flaw, but the microcontroller can only use its flash as persistent memory, so keeping frame counts on the device is not ideal.
+Apart from having to register individual devices nothing much has to be done here, except for setting the payload format. The sensor sends each frame of data in particular format to save bandwidth. The format at the sending end has to match the format at the receiving end.
 
-* Payload format
+**Payload format**
+
+The following code decodes the bytes received from the sensor. It mainly converts fixed point numbers to floating point numbers.  
+**The following code must be pasted** in the *decoder* tab of your application its payload formats. The other tabs (*converter*, *validator* and *encoder*) can be left empty.
 
 <pre><code>
-https://console.thethingsnetwork.org/applications/adam_soundz/payload-formats
-
+// For example, an uQ7.1 is an unsigned number with 7 bits for the integer part and 1 bit for the fractional part.
+// As such it has a range of [0 - 127.5].
 function Decoder(bytes, port) {
   var mean = bytes[0]/2.0; //convert from uQ7.1
   var min = bytes[1]/2.0; //convert from uQ7.1
   var max = bytes[2]/2.0; //convert from uQ7.1
   var stddev = bytes[3]/8.0; //convert from uQ5.3
   var n = (bytes[5] << 8) | bytes[4];
-
   return {
     mean: mean,
     min: min,
@@ -171,6 +171,28 @@ function Decoder(bytes, port) {
   };
 }
 </pre></code>
+
+#### Device settings
+
+For each device added to the application the following settings have to be applied in the settings tab of the device:
+
+* *Activation Method* : ABP  
+ ABP is currently used since this has less overhead than OTAA which is preferable wnen the devices resets often (as the device does, see [limitations](#limitations) ).
+
+* *Frame Counter Checks* : Off  
+ These need to be disabled. This is a security flaw, but the microcontroller can only use its flash as persistent memory, so keeping frame counts on the device is not ideal.
+
+## Tools
+
+The following tools can be found in the repository:
+
+* [*precalculate_bin_scale_table*](./Arduino/AmsterdamSoundsKit/Tools/PrecalculateBinScaleTable/precalculate_bin_scale_table.rb)  
+A Ruby script that generates the table in [*EQ.h*](./Arduino/AmsterdamSoundsKit/). It uses the frequency response of the microphone as input and a formula for calculating the frequency response of the dBA weighting. The microphone response was extracted from the datasheet.
+* [*SPLDisplay*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
+A Processing sketch that reads data from the sensor in order to display it nicely ([see](#SLM-settings)).
+* [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
+
+
 
 ## Enclosure
 
@@ -193,7 +215,9 @@ LoRa timing is critical. Currently the SLM cannot read en process audio and do t
 **data rate**  
 LoRa has limited bandwidth for data transfer. Therefore the sensor only sends averages and statistics over periods of time (default minutely).
 
-### Tools
+## Considerations
+
+
 
 **bin scale table**  
 ...
