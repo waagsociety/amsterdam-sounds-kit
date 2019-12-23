@@ -202,11 +202,23 @@ Within the Amsterdam Sounds project a standard sized box (115mm x 65mm x 40mm) i
 
 #### 3D printable microphone mount  
 A custom 3D printable mount was designed for placing the microphone outside of the box and as a base for a standard sizes microphone windshield. The mount consists of [*two parts*](./Arduino/AmsterdamSoundsKit/Enclosure) that can be printed with a 3D printer or ordered via an online printing service.
+
 ![alt Amsterdam Sounds Kit microphone mount](./images/mount.jpg "Amsterdam Sounds Kit microphone mount")
 
-#### Acoustic vent  
-Sadly this is the only part that is not easily available. But..
+The mount can be glued onto the standard casing (pvc glue does work, drill a whole for the microphone cable first).
 
+#### Acoustic vent  
+In order to protect the microphone sound input hole an acoustic vent was used. These vents have a acoustically transparent ePTFE membrane and are used by smartphone manufacturers for the protection of microphones and speakers.
+Sadly this is the one part that is not easily available if you just want to buy little amounts. However, they can be ordered via Alibaba for example. The vent is an adhesive that can be applied like a sticker direcly on the SPH0645 breakout board.
+
+![alt Acoustic vent](./images/vent.jpg "Acoustic vent")
+
+#### Other parts
+
+* A cable gland was used to lead the power cable into the box.
+* A GoPro adapter was screwed into enclosure to make it compatable with GoPro mounting gear.
+
+See complete [parts list](#parts-list)
 
 
 ## Code documentation
@@ -223,11 +235,10 @@ LoRa has limited bandwidth for data transfer. Therefore the sensor only sends av
 
 ## Considerations
 
-
-
 ### Parts list
 
-...
+
+
 
 ### References
 
