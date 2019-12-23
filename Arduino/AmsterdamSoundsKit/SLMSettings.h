@@ -13,7 +13,7 @@
 #define SLM_MODE_PROFILE 6 // Print processing time of analysis function in ms
 
 // Current mode
-#define SLM_MODE SLM_MODE_DEBUG
+#define SLM_MODE SLM_MODE_NORMAL
 
 // DATA_SIZE is the amount of real values for FFT input. This also determines the number of FFT bins and BUFFER_SIZE. The audio buffer had some extra room to avoid audio to be overwritten while processed.
 #define DATA_SIZE 1024 //

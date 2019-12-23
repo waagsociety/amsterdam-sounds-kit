@@ -10,11 +10,11 @@
 #include "LoraSettings.h"
 #include "SerialDummy.h"
 
-// Disable all serial ouput use when device is deployed somewhere
-#define DISABLE_SERIAL    0
+// Disable all serial ouput, use when device is deployed somewhere
+#define DISABLE_SERIAL    1
 
 // Send to TTN after each N seconds of measuring
-#define SEND_AFTER    60
+#define SEND_AFTER    300
 
 #if DISABLE_SERIAL
 #define Serial      dummy
@@ -137,7 +137,7 @@ void connect()
   LMIC_reset();
 
   // Next code only needed for ABP
-#if ABP_MODE == 1
+#ifdef ABP_MODE
   uint8_t appskey[sizeof(APPSKEY)];
   uint8_t nwkskey[sizeof(NWKSKEY)];
   memcpy_P(appskey, APPSKEY, sizeof(APPSKEY));
