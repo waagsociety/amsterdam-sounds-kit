@@ -55,7 +55,7 @@ https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 #### General settings
 
 * *SEND_AFTER*  
-Defines at which rate the device sends updates to The Things Network. Keep in mind that there is a limited data rate for the TTN (see [maximum duty cycle](https://www.thethingsnetwork.org/docs/lorawan/duty-cycle.html#maximum-duty-cycle)). The devices sends a summary over the specified period (see [limitations](#limitations)).
+Defines at which rate the device sends updates to The Things Network. Keep in mind that there is a limited data rate for the TTN (see [maximum duty cycle](https://www.thethingsnetwork.org/docs/lorawan/duty-cycle.html#maximum-duty-cycle)). The devices sends a summary over the specified period (see [limitations](#limitations--known-issues)).
 * *DISABLE_SERIAL*  
 Setting this to 1 disables all serial communication. This is recommended to do when deploying the device to stand-alone.
 
@@ -177,7 +177,7 @@ function Decoder(bytes, port) {
 For each device added to the application the following settings have to be applied in the settings tab of the device:
 
 * *Activation Method* : ABP  
- ABP is currently used since this has less overhead than OTAA which is preferable wnen the devices resets often (as the device does, see [limitations](#limitations) ).
+ ABP is currently used since this has less overhead than OTAA which is preferable wnen the devices resets often (as the device does, see [limitations](#limitations--known-issues) ).
 
 * *Frame Counter Checks* : Off  
  These need to be disabled. This is a security flaw, but the microcontroller can only use its flash as persistent memory, so keeping frame counts on the device is not ideal.
@@ -189,9 +189,9 @@ The following tools can be found in the repository:
 * [*precalculate_bin_scale_table*](./Arduino/AmsterdamSoundsKit/Tools/PrecalculateBinScaleTable/precalculate_bin_scale_table.rb)  
 A Ruby script that generates the table in [*EQ.h*](./Arduino/AmsterdamSoundsKit/). It uses the frequency response of the microphone as input and a formula for calculating the frequency response of the dBA weighting. The microphone response was extracted from the datasheet.
 * [*SPLDisplay*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
-A Processing sketch that reads data from the sensor in order to display it nicely ([see](#SLM-settings)).
+A Processing sketch that reads data from the sensor in order to display it nicely. ([SLM settings](#slm-settings)).
 * [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
-
+A Processing sketch that reads raw FFT output data from the sensor in order to display it ([SLM settings](#slm-settings)).
 
 
 ## Enclosure
