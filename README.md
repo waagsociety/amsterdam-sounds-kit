@@ -3,7 +3,7 @@
 
 ![alt Amsterdam Sounds Kit](./images/amsterdam-sounds-kit.jpg "Amsterdam Sounds Kit")
 
-However the code is intended for bringing a TTN sound level meter in the air. The code can easily be adapter to make a stand alone offline device by stripping out the LoRa part of de the code.
+However the code is intended for bringing a TTN sound level meter in the air. The code can easily be adapted to make a stand alone offline device by stripping out the LoRa part of de the code.
 
 ## Electronic components assembly
 
@@ -26,13 +26,15 @@ The least that needs to be done to get the sound level measurement part running 
 +---------+     | IO1            | <-+
                 |                |   |
                 | 6              | <-+
+                | Ant.           | <------------------------
                 +----------------+
 
 </pre>
 </code>
 
 **N.B.**
-For getting the LoRa communication running make sure to also connect pin 6 and I01 since this is used by LMIC library to control the radio module.
+* For getting the LoRa communication running make sure to also connect pin 6 and I01 since this is used by LMIC library to control the radio module.
+* A solid wire can be use as an antenna. [Look up](https://learn.adafruit.com/adafruit-feather-m0-radio-with-lora-radio-module/antenna-options) which length is needed for which LoRa frequency.
 
 ## Code installation
 
@@ -193,14 +195,18 @@ A Processing sketch that reads data from the sensor in order to display it nicel
 * [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
 A Processing sketch that reads raw FFT output data from the sensor in order to display it ([SLM settings](#slm-settings)).
 
-
 ## Enclosure
 
-**3D printable microphone mount**  
-...
+The bare components can be put in a custom housing for outdoor use.
+Within the Amsterdam Sounds project a standard sized box (115mm x 65mm x 40mm) is used for containing the microprocessor and the antenna. The microphone placement is a little more difficult. It must be outside, but protected from the weather.
 
-**Acoustic vent**  
-...
+#### 3D printable microphone mount  
+A custom 3D printable mount was designed for placing the microphone outside of the box and as a base for a standard sizes microphone windshield. The mount consists of [*two parts*](./Arduino/AmsterdamSoundsKit/Enclosure) that can be printed with a 3D printer or ordered via an online printing service.
+![alt Amsterdam Sounds Kit microphone mount](./images/mount.jpg "Amsterdam Sounds Kit microphone mount")
+
+#### Acoustic vent  
+Sadly this is the only part that is not easily available. But..
+
 
 
 ## Code documentation
@@ -218,9 +224,6 @@ LoRa has limited bandwidth for data transfer. Therefore the sensor only sends av
 ## Considerations
 
 
-
-**bin scale table**  
-...
 
 ### Parts list
 
