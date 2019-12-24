@@ -14,7 +14,7 @@
 ## Amsterdam Sounds kit  
 **Open source (hardware) sound level meter for the internet of things.**
 
-![alt Amsterdam Sounds Kit](images/amsterdam-sounds-kit.jpg "Amsterdam Sounds Kit")
+![alt Amsterdam Sounds Kit](./images/amsterdam-sounds-kit.jpg "Amsterdam Sounds Kit")
 
 However the code is intended for bringing a TTN sound level meter in the air. The code can easily be adapted to make a stand alone offline device by stripping out the LoRa part of de the code.
 
@@ -60,7 +60,7 @@ https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 
 #### AmsterdamSoundsKit
 
-* Download the code and open [**AmsterdamSoundsKit.ino**]([Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino]) in the  Arduino IDE.
+* Download the code and open [**AmsterdamSoundsKit.ino**]([./Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino]) in the  Arduino IDE.
 
 ## Configuration
 
@@ -71,7 +71,7 @@ Defines at which rate the device sends updates to The Things Network. Keep in mi
 * *DISABLE_SERIAL*  
 Setting this to 1 disables all serial communication. This is recommended to do when deploying the device to stand-alone.
 
-Snippet from [*AmsterdamSoundsKit.ino*](Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino)
+Snippet from [*AmsterdamSoundsKit.ino*](./Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino)
 
 ```c
 // Disable all serial ouput, use when device is deployed somewhere
@@ -85,7 +85,7 @@ Snippet from [*AmsterdamSoundsKit.ino*](Arduino/AmsterdamSoundsKit/AmsterdamSoun
 
 Currently only ABP is implemented. The device address and keys have to be set to the ones generated in the TTN console.
 
-Snippet from [*LoraSettings.h*](Arduino/AmsterdamSoundsKit/LoraSettings.h)
+Snippet from [*LoraSettings.h*](./Arduino/AmsterdamSoundsKit/LoraSettings.h)
 
 ```c
 static const PROGMEM u1_t NWKSKEY[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -104,7 +104,7 @@ static const u4_t DEVADDR = 0x00000000;
 
 #### SLM settings
 
-Snippet from [*SLMSettings.h*](Arduino/AmsterdamSoundsKit/SLMSettings.h)
+Snippet from [*SLMSettings.h*](./Arduino/AmsterdamSoundsKit/SLMSettings.h)
 
 ```c
 // Current mode
@@ -118,9 +118,9 @@ Defines if and how the device outputs to the serial port, allowed values:
  * *SLM_MODE_STREAM_AUDIO*  
  The SLM streams the raw audio data from the microphone to serial port converting the 18 bit samples to 32 bit. This allows for capturing the audio to disk or listening to it to make sure it is OK (see [Tools](#tools)).
  * *SLM_MODE_STREAM_FFT*  
- The SLM outputs the raw ouput of the FFT to the serial port. Can be used in combination with the [*SpectrumPlotter*](Arduino/AmsterdamSoundsKit/Tools/SpectrumPlotter/SpectrumPlotter.pde) Processing tool. Note, conversion from fixed point numbers to float is done in Processing.
+ The SLM outputs the raw ouput of the FFT to the serial port. Can be used in combination with the [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SpectrumPlotter/SpectrumPlotter.pde) Processing tool. Note, conversion from fixed point numbers to float is done in Processing.
  * *SLM_MODE_OUTPUT*  
- The SLM outputs live dBA levels in a binary format. Intended to use with [*SPLDisplay*]((Arduino/AmsterdamSoundsKit/Tools/SpectrumPlotter/SPLDisplay.pde) Processing tool.
+ The SLM outputs live dBA levels in a binary format. Intended to use with [*SPLDisplay*]((./Arduino/AmsterdamSoundsKit/Tools/SpectrumPlotter/SPLDisplay.pde) Processing tool.
  * *SLM_MODE_DEBUG*  
  The SLM writes live dBA levels in readable format to the serial port.
  * *SLM_MODE_PROFILE*  
@@ -128,7 +128,7 @@ Defines if and how the device outputs to the serial port, allowed values:
 
 
 * *Other settings*  
-These settings are probably good to go. They allow you to tweak how the audio is analysed. Current settings make the device capture audio at 48000Hz and do a FFT analysis over 1024 samples of audio at a rate of 32 times per second. Changing these settings could lead to performance or memory issues. For example, longer FFT requires more processing time and longer buffers. Secondly the  scaling table for correcting the frequency response of the microphone and doing dBA weighting is precalculated for a specific FFT size. Changing this would require precalculating a new table ([*EQ.h*](Arduino/AmsterdamSoundsKit/)).
+These settings are probably good to go. They allow you to tweak how the audio is analysed. Current settings make the device capture audio at 48000Hz and do a FFT analysis over 1024 samples of audio at a rate of 32 times per second. Changing these settings could lead to performance or memory issues. For example, longer FFT requires more processing time and longer buffers. Secondly the  scaling table for correcting the frequency response of the microphone and doing dBA weighting is precalculated for a specific FFT size. Changing this would require precalculating a new table ([*EQ.h*](./Arduino/AmsterdamSoundsKit/)).
 
 #### LMIC library settings  
 
@@ -192,11 +192,11 @@ For each device added to the application the following settings have to be appli
 
 The following tools can be found in the repository:
 
-* [*precalculate_bin_scale_table*](Arduino/AmsterdamSoundsKit/Tools/PrecalculateBinScaleTable/precalculate_bin_scale_table.rb)  
-A Ruby script that generates the table in [*EQ.h*](Arduino/AmsterdamSoundsKit/). It uses the frequency response of the microphone as input and a formula for calculating the frequency response of the dBA weighting. The microphone response was extracted from the datasheet.
-* [*SPLDisplay*](Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
+* [*precalculate_bin_scale_table*](./Arduino/AmsterdamSoundsKit/Tools/PrecalculateBinScaleTable/precalculate_bin_scale_table.rb)  
+A Ruby script that generates the table in [*EQ.h*](./Arduino/AmsterdamSoundsKit/). It uses the frequency response of the microphone as input and a formula for calculating the frequency response of the dBA weighting. The microphone response was extracted from the datasheet.
+* [*SPLDisplay*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
 A Processing sketch that reads data from the sensor in order to display it nicely. ([SLM settings](#slm-settings)).
-* [*SpectrumPlotter*](Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
+* [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
 A Processing sketch that reads raw FFT output data from the sensor in order to display it ([SLM settings](#slm-settings)).
 * Capturing / listening device audio using unix/linux tools  
 ```bash
@@ -213,9 +213,9 @@ The bare components can be put in a custom housing for outdoor use.
 Within the Amsterdam Sounds project a standard sized box (115mm x 65mm x 40mm) is used for containing the microprocessor and the antenna. The microphone placement is a little more difficult. It must be outside, but protected from the weather.
 
 #### 3D printable microphone mount  
-A custom 3D printable mount was designed for placing the microphone outside of the box and as a base for a standard sizes microphone windshield. The mount consists of [*two parts*](/Arduino/AmsterdamSoundsKit/Enclosure) that can be printed with a 3D printer or ordered via an online printing service.
+A custom 3D printable mount was designed for placing the microphone outside of the box and as a base for a standard sizes microphone windshield. The mount consists of [*two parts*](./Arduino/AmsterdamSoundsKit/Enclosure) that can be printed with a 3D printer or ordered via an online printing service.
 
-![alt Amsterdam Sounds Kit microphone mount](images/mount.jpg "Amsterdam Sounds Kit microphone mount")
+![alt Amsterdam Sounds Kit microphone mount](./images/mount.jpg "Amsterdam Sounds Kit microphone mount")
 
 The mount can be glued onto the standard casing (PVC glue does work, drill a whole for the microphone cable first).
 
@@ -223,7 +223,7 @@ The mount can be glued onto the standard casing (PVC glue does work, drill a who
 In order to protect the microphone sound input hole an acoustic vent was used. These vents have a acoustically transparent ePTFE membrane and are used by smartphone manufacturers for the protection of microphones and speakers.
 Sadly this is the one part that is not easily available if you just want to buy little amounts. However, they can be ordered via Alibaba for example. The vent is an adhesive that can be applied like a sticker directly on the SPH0645 breakout board.
 
-![alt Acoustic vent](images/vent.jpg "Acoustic vent")
+![alt Acoustic vent](./images/vent.jpg "Acoustic vent")
 
 #### Other parts
 
