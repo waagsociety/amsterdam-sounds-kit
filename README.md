@@ -1,4 +1,17 @@
-# Amsterdam Sounds kit  
+* [Amsterdam Sounds kit](#amsterdam-sounds-kit)
+* [Electronic components assembly](#electronic-components-assembly)
+* [Code installation](#code-installation)
+* [Configuration](#configuration)
+* [TTN setup](#ttn-setup)
+* [Tools](#tools)
+* [Enclosure](#enclosure)
+* [Code documentation](#code-documentation)
+* [Limitations / known issues](#limitations---known-issues)
+* [Considerations](#considerations)
+* [Parts list](#parts-list)
+* [References](#references)
+
+## Amsterdam Sounds kit  
 **Open source (hardware) sound level meter for the internet of things.**
 
 ![alt Amsterdam Sounds Kit](./images/amsterdam-sounds-kit.jpg "Amsterdam Sounds Kit")
@@ -104,15 +117,9 @@ Snippet from [*SLMSettings.h*](./Arduino/AmsterdamSoundsKit/SLMSettings.h)
 * *SLM_MODE*  
 Defines if and how the device outputs to the serial port, allowed values:
  * *SLM_MODE_NORMAL*  
- The SLM part of the code does not ouput at all. Use when deploying the device to stand-alone situation.
+ The SLM part of the code does not output at all. Use when deploying the device to stand-alone situation.
  * *SLM_MODE_STREAM_AUDIO*  
- The SLM streams the raw audio data from the microphone to serial port converting the 18 bit samples to 32 bit. This allows for capturing the audio to disk or listening to it to make sure it is OK.  
- <pre><code>
- # capture audio to disk (unix/linux)
- cat /dev/cu.usbmodem14111 > audio.raw
- # listen to audio (install mplayer command line utility)
-cat /dev/cu.usbmodem14111 | mplayer -rawaudio rate=48000:channels=1:samplesize=4 -demuxer rawaudio -cache 1024 -
- </pre></code>
+ The SLM streams the raw audio data from the microphone to serial port converting the 18 bit samples to 32 bit. This allows for capturing the audio to disk or listening to it to make sure it is OK (see [Tools](#tools)).
  * *SLM_MODE_STREAM_FFT*  
  The SLM outputs the raw ouput of the FFT to the serial port. Can be used in combination with the [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SpectrumPlotter/SpectrumPlotter.pde) Processing tool. Note, conversion from fixed point numbers to float is done in Processing.
  * *SLM_MODE_OUTPUT*  
@@ -124,7 +131,7 @@ cat /dev/cu.usbmodem14111 | mplayer -rawaudio rate=48000:channels=1:samplesize=4
 
 
 * *Other settings*  
-These settings are probably good to go. They allow you to tweak how the audio is analyzed. Current settings make the device capture audio at 48000hz and do a FFT analysis over 1024 samples of audio at a rate of 32 times per second. Changing these settings could lead to performance or memory issues. For example, longer FFT requires more processing time and longer buffers. Secondly the  scaling table for correcting the frequency response of the microphone and doing dBA weighting is precalculated for a specific FFT size. Changing this would require precalculating a new table ([*EQ.h*](./Arduino/AmsterdamSoundsKit/)).
+These settings are probably good to go. They allow you to tweak how the audio is analysed. Current settings make the device capture audio at 48000Hz and do a FFT analysis over 1024 samples of audio at a rate of 32 times per second. Changing these settings could lead to performance or memory issues. For example, longer FFT requires more processing time and longer buffers. Secondly the  scaling table for correcting the frequency response of the microphone and doing dBA weighting is precalculated for a specific FFT size. Changing this would require precalculating a new table ([*EQ.h*](./Arduino/AmsterdamSoundsKit/)).
 
 #### LMIC library settings  
 
@@ -194,6 +201,14 @@ A Ruby script that generates the table in [*EQ.h*](./Arduino/AmsterdamSoundsKit/
 A Processing sketch that reads data from the sensor in order to display it nicely. ([SLM settings](#slm-settings)).
 * [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
 A Processing sketch that reads raw FFT output data from the sensor in order to display it ([SLM settings](#slm-settings)).
+* Capturing / listening device audio using unix/linux tools  
+<pre><code>
+# capture audio to disk
+cat /dev/cu.usbmodem14111 > audio.raw
+# listen to audio (install mplayer command line utility)
+cat /dev/cu.usbmodem14111 | mplayer -rawaudio rate=48000:channels=1:samplesize=4 -demuxer rawaudio -cache 1024 -
+</pre></code>
+Put the device in [SLM_MODE_STREAM_AUDIO](#slm-settings).
 
 ## Enclosure
 
@@ -205,21 +220,20 @@ A custom 3D printable mount was designed for placing the microphone outside of t
 
 ![alt Amsterdam Sounds Kit microphone mount](./images/mount.jpg "Amsterdam Sounds Kit microphone mount")
 
-The mount can be glued onto the standard casing (pvc glue does work, drill a whole for the microphone cable first).
+The mount can be glued onto the standard casing (PVC glue does work, drill a whole for the microphone cable first).
 
 #### Acoustic vent  
 In order to protect the microphone sound input hole an acoustic vent was used. These vents have a acoustically transparent ePTFE membrane and are used by smartphone manufacturers for the protection of microphones and speakers.
-Sadly this is the one part that is not easily available if you just want to buy little amounts. However, they can be ordered via Alibaba for example. The vent is an adhesive that can be applied like a sticker direcly on the SPH0645 breakout board.
+Sadly this is the one part that is not easily available if you just want to buy little amounts. However, they can be ordered via Alibaba for example. The vent is an adhesive that can be applied like a sticker directly on the SPH0645 breakout board.
 
 ![alt Acoustic vent](./images/vent.jpg "Acoustic vent")
 
 #### Other parts
 
 * A cable gland was used to lead the power cable into the box.
-* A GoPro adapter was screwed into enclosure to make it compatable with GoPro mounting gear.
+* A GoPro adapter was screwed into enclosure to make it compatible with GoPro mounting gear.
 
 See complete [parts list](#parts-list)
-
 
 ## Code documentation
 
@@ -227,20 +241,64 @@ Code documentation is mainly written in the comments of the code.
 
 ## Limitations / known issues
 
-**timing**  
+#### Timing  
 LoRa timing is critical. Currently the SLM cannot read en process audio and do the LoRa communication at the same time.
 
-**data rate**  
+#### Data rate
 LoRa has limited bandwidth for data transfer. Therefore the sensor only sends averages and statistics over periods of time (default minutely).
 
 ## Considerations
 
-### Parts list
+#### LoRaWAN
 
+LoRaWAN was chosen as the network technology for this project since a lot of devices will be deployed in an area that is to big for WiFi coverage, but small enough for one TTN gateway. As such devices are only dependent of power when deployed.
 
+#### Using FFT  
+Using an FFT in the process of calculating dBA may seem inefficient. A time domain filter can also be used to do the A-weighting and microphone frequency response correction. However the CMSIS-DSP FFT implementation is quick enough. Also it saves us from having to use (or make) an extra filter designer tool. Besides scaling the FFT bins is an insightful way of correcting the frequency response.
+Additionally, the DC-offset of microphone is quite big. Ignoring the first bin easily removes the whole effect that this would have on the sound level.
+Finally a future version of this device might also send spectral information.
 
+#### Statistics
+Ideally the devices would send everything that it calculates. That would be about 32 dBA levels per second. At least with LoRa this is not doable. Therefore the device should send data at a much lower rate, at most once every minute. As such the device sends a summaries of measuring periods. Currently the summary contains the following statistical data.
 
-### References
+* **min**  
+The lowest LEQ recorded over the measuring period
+* **mean**  
+The mean LEQ over the measuring period
+* **max**  
+The highest LEQ recorded over the measuring period
+* **stdev**  
+The standard deviation over the mean LEQ.
+* **N**  
+The amount of frames analysed  over the measuring period.
+
+*The standard deviation gives some insight in regularity of the sound level over the measuring period. Since the device sends only summaries a lot of spikes will be lost, however a high standard deviation is a hint for a period with a lot of variation in sound level.*
+
+*LEQ being the running average dBA level over 1/8th of a second. Typically calculated over 8 analysed frames.*
+
+#### Spectral information
+
+Sound levels in dBA tell something about the noise situation, but not everything. The perception of two sounds with the same level can be totally different. One peak can be much more pervasive during a moment of silence. The Amsterdam Sounds project is about mapping the noise situation in the city of Amsterdam. It would give a lot of insight if we could not only measure the levels of sound but also define what the sound is and how it was experienced by people.
+A first step to increasing the possibilities for increasing such insights might be to send spectral information from the device. It comes in handy that the device already does FFT analysis.
+
+## Parts list
+
+1. Microphone on breakout board  
+https://www.adafruit.com/product/3421
+1. Feather M0 with integrated LoRa radio for European frequency plan (EU863-870)  
+https://www.adafruit.com/product/3178
+1. Li Yue ⌀7x4mm, acoustic vent for sealing the microphone hole  
+https://www.alibaba.com/product-detail/Black-Custom-Size-Waterproof-IP-67_62167248114.html
+1. RND 455-00182, standard size enclosure (115mm x 65mm x 40mm)   
+https://www.reichelt.nl/kunststof-behuizing-115-x-65-x-40-lichtgrijs-rnd-455-00182-p193396.html
+1. Rycote 35/50 Reporter Mic Foam  
+https://rycote.com/microphone-windshield-shock-mount/mic-foams-and-windjammers/
+1. GoPro mount adapter  
+https://www.uwcamera.nl/webshop/actioncam-accessoires/bekijk-alle-accessoires/detail/9647/14-male-schroefdraad-naar-gopro-adapter--tripod-adapter-omvormer.html
+
+*Manufacturers website links where possible.*
+
+## References
 
 1. Project homepage  
 https://amsterdamsounds.waag.org
@@ -252,11 +310,3 @@ https://arm-software.github.io/CMSIS_5/DSP/html/modules.html
 https://github.com/mcci-catena/arduino-lmic
 1. Datasheet of digital MEMS microphone (SPH0645LM4H)  
 https://cdn-shop.adafruit.com/product-files/3421/i2S+Datasheet.PDF
-1. Microphone on breakout board  
-https://www.adafruit.com/product/3421
-1. Feather M0 with integrated LoRa radio for European frequency plan (EU863-870)  
-https://www.adafruit.com/product/3178
-1. Acoustic vents for sealing the microphone hole  
-https://www.alibaba.com/product-detail/Black-Custom-Size-Waterproof-IP-67_62167248114.html
-1. Standard size enclosure (115mm x 65mm x 40mm)  
-https://www.reichelt.nl/kunststof-behuizing-115-x-65-x-40-lichtgrijs-rnd-455-00182-p193396.html
