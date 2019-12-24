@@ -213,7 +213,7 @@ The bare components can be put in a custom housing for outdoor use.
 Within the Amsterdam Sounds project a standard sized box (115mm x 65mm x 40mm) is used for containing the microprocessor and the antenna. The microphone placement is a little more difficult. It must be outside, but protected from the weather.
 
 #### 3D printable microphone mount  
-A custom 3D printable mount was designed for placing the microphone outside of the box and as a base for a standard sizes microphone windshield. The mount consists of [*two parts*](Arduino/AmsterdamSoundsKit/Enclosure) that can be printed with a 3D printer or ordered via an online printing service.
+A custom 3D printable mount was designed for placing the microphone outside of the box and as a base for a standard sizes microphone windshield. The mount consists of [*two parts*](/Arduino/AmsterdamSoundsKit/Enclosure) that can be printed with a 3D printer or ordered via an online printing service.
 
 ![alt Amsterdam Sounds Kit microphone mount](images/mount.jpg "Amsterdam Sounds Kit microphone mount")
 
