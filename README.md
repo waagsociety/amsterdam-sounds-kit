@@ -6,7 +6,7 @@
 * [Tools](#tools)
 * [Enclosure](#enclosure)
 * [Code documentation](#code-documentation)
-* [Limitations / known issues](#limitations---known-issues)
+* [Limitations / known issues](#limitations--known-issues)
 * [Considerations](#considerations)
 * [Parts list](#parts-list)
 * [References](#references)
