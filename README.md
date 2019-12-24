@@ -25,8 +25,7 @@ However the code is intended for bringing a TTN sound level meter in the air. Th
 
 The least that needs to be done to get the sound level measurement part running is connecting the microphone (SPH0645LM4H) to the microcontroller. The schematic diagram assumes a Adafruit Feather M0 RFM95 LoRa is used. With other pins a Arduino Zero will also work and any other ATSAMD21 Cortex M0 based board.
 
-<pre>
-<code>
+```
 +---------+     +----------------+  
 | SPH0645 |     | Feather M0     |  
 +---------+     +----------------+  
@@ -41,9 +40,7 @@ The least that needs to be done to get the sound level measurement part running 
                 | 6              | <-+
                 | Ant.           | <------------------------
                 +----------------+
-
-</pre>
-</code>
+```
 
 **N.B.**
 * For getting the LoRa communication running make sure to also connect pin 6 and I01 since this is used by LMIC library to control the radio module.
@@ -76,13 +73,13 @@ Setting this to 1 disables all serial communication. This is recommended to do w
 
 Snippet from [*AmsterdamSoundsKit.ino*](./Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino)
 
-<pre><code>
+```c
 // Disable all serial ouput, use when device is deployed somewhere
 #define DISABLE_SERIAL    1
 
 // Send to TTN after each N seconds of measuring
 #define SEND_AFTER    300
-</pre></code>
+```
 
 #### LoRa settings
 
@@ -90,11 +87,11 @@ Currently only ABP is implemented. The device address and keys have to be set to
 
 Snippet from [*LoraSettings.h*](./Arduino/AmsterdamSoundsKit/LoraSettings.h)
 
-<pre><code>
+```c
 static const PROGMEM u1_t NWKSKEY[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 static const u1_t PROGMEM APPSKEY[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 static const u4_t DEVADDR = 0x00000000;
-</pre></code>
+```
 
 * *NWKSKEY*  
 16 byte **Network Session Key** to be copied from device overview in TTN console.
@@ -109,10 +106,10 @@ static const u4_t DEVADDR = 0x00000000;
 
 Snippet from [*SLMSettings.h*](./Arduino/AmsterdamSoundsKit/SLMSettings.h)
 
-<pre><code>
+```c
 // Current mode
 #define SLM_MODE SLM_MODE_DEBUG
-</pre></code>
+```
 
 * *SLM_MODE*  
 Defines if and how the device outputs to the serial port, allowed values:
@@ -138,7 +135,7 @@ These settings are probably good to go. They allow you to tweak how the audio is
 Make sure to set the correct LoRa network plan in *lmic_project_config.h*. This file typically resides in the *libraries/MCCI_LoRaWAN_LMIC_library/project_config* folder in your Arduino projects folder.  
 The following settings are an example for use of the European TTN plan.
 
-<pre><code>
+```c
 #define CFG_eu868
 #define LMIC_DEBUG_LEVEL 0
 #define CFG_sx1276_radio 1
@@ -146,7 +143,7 @@ The following settings are an example for use of the European TTN plan.
 #define DISABLE_BEACONS
 #define DISABLE_PING
 #define DISABLE_JOIN
-</pre></code>
+```
 
 ## TTN setup
 
@@ -162,7 +159,7 @@ Apart from having to register individual devices nothing much has to be done her
 The following code decodes the bytes received from the sensor. It mainly converts fixed point numbers to floating point numbers.  
 **The following code must be pasted** in the *decoder* tab of your application its payload formats. The other tabs (*converter*, *validator* and *encoder*) can be left empty.
 
-<pre><code>
+```js
 // For example, an uQ7.1 is an unsigned number with 7 bits for the integer part and 1 bit for the fractional part.
 // As such it has a range of [0 - 127.5].
 function Decoder(bytes, port) {
@@ -179,7 +176,7 @@ function Decoder(bytes, port) {
     n: n
   };
 }
-</pre></code>
+```
 
 #### Device settings
 
@@ -202,12 +199,12 @@ A Processing sketch that reads data from the sensor in order to display it nicel
 * [*SpectrumPlotter*](./Arduino/AmsterdamSoundsKit/Tools/SPLDisplay/SPLDisplay.pde)  
 A Processing sketch that reads raw FFT output data from the sensor in order to display it ([SLM settings](#slm-settings)).
 * Capturing / listening device audio using unix/linux tools  
-<pre><code>
+```bash
 # capture audio to disk
 cat /dev/cu.usbmodem14111 > audio.raw
 # listen to audio (install mplayer command line utility)
 cat /dev/cu.usbmodem14111 | mplayer -rawaudio rate=48000:channels=1:samplesize=4 -demuxer rawaudio -cache 1024 -
-</pre></code>
+```
 Put the device in [SLM_MODE_STREAM_AUDIO](#slm-settings).
 
 ## Enclosure
