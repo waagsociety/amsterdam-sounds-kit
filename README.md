@@ -60,7 +60,7 @@ https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 
 #### AmsterdamSoundsKit
 
-* Download the code and open [**AmsterdamSoundsKit.ino**]([Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino]) in the  Arduino IDE.
+* Download the code and open [**AmsterdamSoundsKit.ino**](Arduino/AmsterdamSoundsKit/AmsterdamSoundsKit.ino) in the  Arduino IDE.
 
 ## Configuration
 
